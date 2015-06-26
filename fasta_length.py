@@ -1,4 +1,3 @@
-#!$PYTHON/python
 from Bio import SeqIO
 import sys
 cmdargs = str(sys.argv)
