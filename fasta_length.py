@@ -1,4 +1,3 @@
-#!/data004/software/GIF/packages/python/2.7.6/bin/python
 from Bio import SeqIO
 import sys
 cmdargs = str(sys.argv)

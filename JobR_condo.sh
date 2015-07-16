@@ -66,8 +66,7 @@ num=1
 while chunk=$(readlines ${LINES}); do
 cat <<JOBHEAD > ${INFILE%%.*}_${num}.sub
 #!/bin/bash
-#PBS -l vmem=256Gb,pmem=8Gb,mem=256Gb
-#PBS -l nodes=1:ppn=32:ib
+#PBS -l nodes=1:ppn=16
 #PBS -l walltime=48:00:00
 #PBS -N ${INFILE%%.*}_${num}
 #PBS -o \${PBS_JOBNAME}.o\${PBS_JOBID} -e \${PBS_JOBNAME}.e\${PBS_JOBID}
@@ -75,9 +74,8 @@ cat <<JOBHEAD > ${INFILE%%.*}_${num}.sub
 cd \$PBS_O_WORKDIR
 ulimit -s unlimited
 chmod g+rw \${PBS_JOBNAME}.[eo]\${PBS_JOBID}
-module use /data004/software/GIF/modules
+module use /data003/GIF/software/modules
 module load parallel
-module load ncbi-blast
 parallel <<FIL
 JOBHEAD
 echo -e "${chunk}" >> ${INFILE%%.*}_${num}.sub
