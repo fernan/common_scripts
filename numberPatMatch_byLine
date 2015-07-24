@@ -1,0 +1,11 @@
+#!/bin/bash
+
+while read line
+do
+counts=`echo $line | grep -o "0|1" | wc -l;`
+counts2=`echo $line | grep -o "1|0" | wc -l;`
+counts3=`echo $line | grep -o "1|1" | wc -l;`
+counts4=`echo $line | grep -o "0|0" | wc -l;`
+countsHet=$(expr $counts + $counts2) 
+echo "$line $counts4 $counts3 $counts $counts2 $countsHet"
+done
