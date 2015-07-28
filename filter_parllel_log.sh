@@ -18,4 +18,4 @@ else
    exit
 fi
 
-grep -F -x -v -f .done_cmds ${CMDS} > ${CMDS%.*}_unfinished.txt
+grep -F -x -v -f .done_cmds ${CMDS}
