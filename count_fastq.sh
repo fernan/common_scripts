@@ -8,7 +8,7 @@ function printUsage () {
 
 Synopsis
 
-    $scriptName [-h | --help] fastq_file1 [fastq_file2 fastq_file3 ..] || *.fastq
+    $scriptName [-h | --help] fastq_file1 [fastq_file2 fastq_file3 ..] || *.fastq[.gz]
 
 Description
 
@@ -67,6 +67,17 @@ do
 if [ ! -f $i ]; then
     echo "\"$i\" file not found!"
     exit 1;
+fi
+
+if [[ $i =~ \.gz$ ]]; then
+lines=$(zcat $i | wc -l |cut -d " " -f 1)
+count=$(($lines / 4))
+echo -n -e "\t$i : "
+echo "$count"  | \
+sed -r '
+  :L
+  s=([0-9]+)([0-9]{3})=\1,\2=
+  t L'
 fi
 
 lines=$(wc -l $i|cut -d " " -f 1)
