@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#this script was written to count heterozygous and homozygous snp calls for each snp across many lines.
+#it was used to determine how much heterozygosity there was per snp before and after filtering.
+ 
 while read line
 do
 counts=`echo $line | grep -o "0|1" | wc -l;`
