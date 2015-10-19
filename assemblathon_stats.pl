@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/data003/GIF/software/packages/perl/5.22.0/bin/perl
 #
 # assemblathon_stats.pl
 #
