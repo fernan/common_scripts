@@ -1,9 +1,17 @@
-#!/usr/bin/perl
+#!/data003/GIF/software/packages/perl/5.22.0/bin/perl
+#taken from https://www.biostars.org/p/46281/ and modified as needed 10/15/15
 use strict;
 use warnings;
 use Bio::Seq;
 use Bio::SeqIO;
 use Bio::DB::Fasta;
+
+#add a help message here
+my $num_args=$#ARGV + 1;
+if ($num_args != 3) {
+	print "\nUsage: gff2perl Genome.fasta Annotation.gff OutputPrefix \n\n";
+	exit;
+}
 
 $| = 1;    # Flush output
 my $outfile_cds = Bio::SeqIO->new( -format => 'fasta', -file => ">$ARGV[2].cds.fasta" );
@@ -37,7 +45,7 @@ while ( my $line = <GFF> ) {
     my @array = split( "\t", $line );
     my $type = $array[2];
 
-    if ($type eq 'gene') {
+    if ($type eq 'gene' || $type eq 'mt_gene' ) {
         my @attrs = split( ";", $array[8] );
         $attrs[0] =~ s/ID=//;
         my $gene_name = $attrs[0];
@@ -81,12 +89,17 @@ while ( my $line = <GFF> ) {
         else {
             die "Unknown frame! At line $. of the GFF\n";
         }
-        $outfile_gene->write_seq($output_gene);
+	#added an if statement for all outputs requiring there to be sequence information before writing to file otherwise the fasta file contains lots of empty fasta headers
+        if (length($gene_seq) != 0) {
+	$outfile_gene->write_seq($output_gene);
+	}
+	if (length($upstream_seq) != 0) {
         $outfile_upstream3000->write_seq($output_upstream3000);
+	}
     }
 
-
-    if ( ( $type eq 'mRNA' ) and ( $. > 2 ) ) {
+#should be able to add exon output here since exons will be useful in gene models for other organisms can be added in the EVM program
+    if ( ( $type eq 'mRNA' || $type eq 'transcript' ) and ( $. > 2 ) ) {
         # CDS: Collect CDSs and extract sequence of the previous mRNA
         my $mergedCDS_seq;
         # WARNING we must sort by $cds_coord[1]
@@ -109,8 +122,12 @@ while ( my $line = <GFF> ) {
             $output_cds = $output_cds->revcom();
         }
         my $output_pep = $output_cds->translate();
+	if (length($mergedCDS_seq) != 0) {
         $outfile_cds->write_seq($output_cds);
+	}
+	if (length($mergedCDS_seq) != 0) {
         $outfile_pep->write_seq($output_pep);
+	}
 
 
         # CDNA: Collect UTRs and CDSs and extract sequence of the previous mRNA
@@ -131,8 +148,9 @@ while ( my $line = <GFF> ) {
         if ($frame eq '-') {
             $output_cdna = $output_cdna->revcom();
         }
-        $outfile_cdna->write_seq($output_cdna);
-
+        if (length($mergedCDNA_seq) != 0) {
+	$outfile_cdna->write_seq($output_cdna);
+	}
 
 
         # Now initialize the next mRNA
@@ -157,7 +175,6 @@ while ( my $line = <GFF> ) {
         my $utr_coord = $array[0] . " " . $array[3] . " " . $array[4];
         $CDNA{$array[3]}=$utr_coord;
     }
-
 }
 
 close GFF;
