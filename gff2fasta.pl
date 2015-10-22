@@ -19,6 +19,7 @@ my $outfile_pep = Bio::SeqIO->new( -format => 'fasta', -file => ">$ARGV[2].pep.f
 my $outfile_cdna = Bio::SeqIO->new( -format => 'fasta', -file => ">$ARGV[2].cdna.fasta" );
 my $outfile_gene = Bio::SeqIO->new( -format => 'fasta', -file => ">$ARGV[2].gene.fasta" );
 my $outfile_upstream3000 = Bio::SeqIO->new( -format => 'fasta', -file => ">$ARGV[2].upstream3000.fasta" );
+my $outfile_exon = Bio::SeqIO->new( -format => 'fasta', -file => ">$ARGV[2].exon.fasta");
 
 ###### Output type description ######
 # cds - translated sequence (starting with ATG and ending with a stop codon included)
@@ -37,6 +38,7 @@ print ("Genome fasta parsed\n");
 ### Second, parse the GFF3
 my %CDS;
 my %CDNA;
+my %EXON;
 my $mRNA_name;
 my $frame;
 open GFF, "<$ARGV[1]" or die $!;
@@ -98,11 +100,11 @@ while ( my $line = <GFF> ) {
 	}
     }
 
-#should be able to add exon output here since exons will be useful in gene models for other organisms can be added in the EVM program
+#CDS
     if ( ( $type eq 'mRNA' || $type eq 'transcript' ) and ( $. > 2 ) ) {
         # CDS: Collect CDSs and extract sequence of the previous mRNA
         my $mergedCDS_seq;
-        # WARNING we must sort by $cds_coord[1]
+	# WARNING we must sort by $cds_coord[1]
 
 
         foreach my $key (sort {$a <=> $b} keys %CDS) { # Ascending numeric sort of the starting coordinate
@@ -111,6 +113,7 @@ while ( my $line = <GFF> ) {
             my $cds_seq = $db->seq( $cds_coord[0], $cds_coord[1], $cds_coord[2] );
             $mergedCDS_seq .= $cds_seq;
         }
+        
 
         my $output_cds = Bio::Seq->new(
             -seq        => $mergedCDS_seq,
@@ -121,13 +124,40 @@ while ( my $line = <GFF> ) {
         if ($frame eq '-') {
             $output_cds = $output_cds->revcom();
         }
+	#translate CDS to peptide for protein sequence 
         my $output_pep = $output_cds->translate();
+	#write to file
 	if (length($mergedCDS_seq) != 0) {
         $outfile_cds->write_seq($output_cds);
 	}
 	if (length($mergedCDS_seq) != 0) {
         $outfile_pep->write_seq($output_pep);
 	}
+
+#exons
+#should be able to add exon output here since exons will be useful in gene models for other organisms can be added in the EVM program
+        my $mergedEXON_seq;
+        foreach my $key (sort {$a <=> $b} keys %EXON) { # Ascending numeric sort of the starting coordinatg
+            my $coord = $EXON{$key};
+            my @exon_coord = split( " ", $coord );
+            my $exon_seq = $db->seq( $exon_coord[0], $exon_coord[1], $exon_coord[2] );
+            $mergedEXON_seq .= $exon_seq;
+        }
+
+       my $output_exon = Bio::Seq->new(
+            -seq        => $mergedEXON_seq,
+            -id         => $mRNA_name,
+            -display_id => $mRNA_name,
+            -alphabet   => 'dna',
+        ); 
+        if ($frame eq '-') {
+            $output_exon = $output_exon->revcom();
+        }
+	#write to file
+        if (length($mergedEXON_seq) != 0) {
+        $outfile_exon->write_seq($output_exon);
+        }
+
 
 
         # CDNA: Collect UTRs and CDSs and extract sequence of the previous mRNA
@@ -159,6 +189,7 @@ while ( my $line = <GFF> ) {
         $mRNA_name = $attrs[0];
         $frame=$array[6];
         %CDS = (); %CDNA = (); # Empty the chunk arrays
+	%EXON = (); %EXON = (); #Empty the EXON chunk arrays
     }
     elsif ( $type eq 'mRNA' ) {    # First mRNA
         my @attrs = split( ";", $array[8] );
@@ -174,6 +205,10 @@ while ( my $line = <GFF> ) {
     elsif ($type eq 'UTR' ) {
         my $utr_coord = $array[0] . " " . $array[3] . " " . $array[4];
         $CDNA{$array[3]}=$utr_coord;
+    }
+    elsif ($type eq 'exon' ) {
+	my $exon_coord = $array[0] . " " . $array[3] . " " . $array[4];
+	$EXON{$array[3]}=$exon_coord;
     }
 }
 
