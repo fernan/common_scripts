@@ -1,7 +1,8 @@
 #!/bin/bash
 # cp2clip - copy to the clipboard the contents of a file
 
-PATH=/software//GIF/GIF/programs/xclip-0.12:$PATH
+module load xclip
+#PATH=/software//GIF/GIF/programs/xclip-0.12:$PATH
 # Program name from it's filename
 prog=${0##*/}
 
