@@ -3,12 +3,12 @@
 
 ## MODULES
 module use /data004/software/GIF/modules
-module load parallel
-module load gmap
+module load LAS/parallel/20150922
+module load Serdor
+module load gmap-gsnap/2015-09-29
 
 ## PATHS
-export GMAPDB=/home/arnstrm/arnstrm/GMAPDB
-DB_NAME="GRCm38.78_musmus"
+DB_NAME=$GNAME
 
 FILE1="$1"
 FILE2=$(echo "$1" |sed 's/_R1_/_R2_/g')
@@ -31,16 +31,16 @@ OUTFILE=$(basename ${FILE1%%.*})
 #
 # if fastq is gzipped use:
 # --gunzip
+#--novelsplicing=1 \
+#--gunzip \
 
 parallel --jobs 4 \
   "gsnap \
+--dir=$GMAPDB \
 --db=${DB_NAME} \
 --part={}/4 \
 --batch=4 \
---nthreads=8 \
---novelsplicing=1 \
---gunzip \
---terminal-threshold=100 \
+--nthreads=4 \
 --indel-penalty=1 \
 --trim-mismatch-score=0 \
 --expand-offsets=1 \
