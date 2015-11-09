@@ -11,13 +11,13 @@ fi
 #load requried programs to create genome module files
 module purge
 module load perl
-module load gmap-gsnap 
+module load gmap-gsnap/2015-09-29
 module load parallel
 module load bowtie2
 module load bwa
 module load gatk
 module load bedtools
-
+module load samtools
 
 
 #create local variables 
@@ -48,12 +48,13 @@ unsetenv   GMAPDB
 unsetenv   GNAME
 
 #set general variable names when working with only one genome
-setenv  GENOME        ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}
-setenv  GMAPDB        ${GSEQ}/${NAME}/${BUILD}
+setenv  GENOMEDIR        ${GSEQ}/${NAME}/${BUILD}/
+setenv  GENOMEFASTA	 ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}.fasta
 setenv  GNAME         ${NAME}_${BUILD}
-
-setenv  "${NAME}_${BUILD}_genome" ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}
-setenv  "${NAME}_${BUILD}_GMAPDB" ${GSEQ}/${NAME}/${BUILD}/
+setenv  GMAPDB        ${GSEQ}/${NAME}/${BUILD}/$GNAME
+setenv  modulefile	${GMOD}/${NAME}/${BUILD}
+setenv  "${NAME}_${BUILD}_genome" ${GSEQ}/${NAME}/${BUILD}/
+setenv  "${NAME}_${BUILD}_GMAPDB" ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}
 setenv  "${NAME}_${BUILD}_GNAME" ${NAME}_${BUILD}
 
 setenv  "${NAME}_${BUILD}_cdna" ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}.fasta
@@ -69,11 +70,13 @@ MODULEFILE
 
 
 # Create Fasta files from GFF file
-gff2fasta.pl ${REF} ${GFF} ${NAME}_${BUILD}
+/data005/GIF2/severin/isugif/common_scripts/gff2fasta.pl ${REF} ${GFF} ${NAME}_${BUILD}
 mv ${NAME}_${BUILD}* ${GSEQ}/${NAME}/${BUILD}/
 
 # build index for GSNAP, Bowtie2, BWA and SAMTOOLS
+module unload perl
 parallel <<FIL
+
 gmap_build -d ${NAME}_${BUILD} -D ${GSEQ}/${NAME}/${BUILD} ${REF}
 bowtie2-build ${REF} ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}
 samtools faidx ${REF}
