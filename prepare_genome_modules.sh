@@ -89,6 +89,7 @@ FIL
 mv ${REF}.fai ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}.fai
 mv ${NAME}_${BUILD}* ${GSEQ}/${NAME}/${BUILD}/
 mv ${NAME}_${BUILD}.dict ${GSEQ}/${NAME}/${BUILD}/
+ln -s ${NAME}_${BUILD}.fai ${NAME}_${BUILD}.fasta.fai
 
 # build intervals and cleanup
 fasta_length.py ${REF} > ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_length.txt
