@@ -50,12 +50,15 @@ unsetenv   GNAME
 #set general variable names when working with only one genome
 setenv  GENOMEDIR        ${GSEQ}/${NAME}/${BUILD}/
 setenv  GENOMEFASTA	 ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}.fasta
+setenv	GENOMEINTERVALS	${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_100kb_coords.bed
 setenv  GNAME         ${NAME}_${BUILD}
 setenv  GMAPDB        ${GSEQ}/${NAME}/${BUILD}/$GNAME
 setenv  modulefile	${GMOD}/${NAME}/${BUILD}
 setenv  "${NAME}_${BUILD}_genome" ${GSEQ}/${NAME}/${BUILD}/
 setenv  "${NAME}_${BUILD}_GMAPDB" ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}
 setenv  "${NAME}_${BUILD}_GNAME" ${NAME}_${BUILD}
+
+setenv  "${NAME}_${BUILD}_intervals100k" ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_100kb_coords.bed 
 
 setenv  "${NAME}_${BUILD}_cdna" ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}.fasta
 setenv  "${NAME}_${BUILD}_cdna" ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}.gff3
@@ -93,7 +96,7 @@ ln -s ${NAME}_${BUILD}.fai ${NAME}_${BUILD}.fasta.fai
 
 # build intervals and cleanup
 fasta_length.py ${REF} > ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_length.txt
-bedtools makewindows -w ${WINDOW} -g  ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_length.txt >  ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_100kb_coords.bed
+bedtools makewindows -w ${WINDOW} -g  ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_length.txt |  awk '{print $1"\t"$2+1"\t"$3}' >  ${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_100kb_coords.bed
 java -Xmx100G -jar $PICARD/picard.jar BedToIntervalList \
   INPUT=${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_100kb_coords.bed \
   SEQUENCE_DICTIONARY=${GSEQ}/${NAME}/${BUILD}/${NAME}_${BUILD}_100kb_coords.dict \
