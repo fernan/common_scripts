@@ -62,6 +62,7 @@ function readlines () {
     done
     return $rc
 }
+netid=$(whoami)
 num=1
 while chunk=$(readlines ${LINES}); do
 cat <<JOBHEAD > ${INFILE%%.*}_${num}.sub
@@ -70,7 +71,7 @@ cat <<JOBHEAD > ${INFILE%%.*}_${num}.sub
 #PBS -l walltime=48:00:00
 #PBS -N ${INFILE%%.*}_${num}
 #PBS -o \${PBS_JOBNAME}.o\${PBS_JOBID} -e \${PBS_JOBNAME}.e\${PBS_JOBID}
-#PBS -m ae -M arnstrm@gmail.com
+#PBS -m ae -M $netid@iastate.edu
 cd \$PBS_O_WORKDIR
 ulimit -s unlimited
 chmod g+rw \${PBS_JOBNAME}.[eo]\${PBS_JOBID}
@@ -80,6 +81,7 @@ parallel <<FIL
 JOBHEAD
 echo -e "${chunk}" >> ${INFILE%%.*}_${num}.sub
 echo -e "FIL\nqstat -f \"\$PBS_JOBID\" | head" >> ${INFILE%%.*}_${num}.sub
+echo -e "FIL\nwalltime" >> ${INFILE%%.*}_${num}.sub
 ((num++))
 done<"${INFILE}"
 sed -i '/^$/d' ${INFILE}

@@ -66,7 +66,7 @@ function readlines () {
     return $rc
 }
 #> ${INFILE%%.*}_${num}.sub
-cat <<-JOBHEAD > ${INFILE%%.*}_$SCRIPT.sub 
+cat <<-JOBHEAD > ${INFILE}_$SCRIPT.sub 
 #!/bin/bash
 #PBS -l nodes=8:ppn=16
 #PBS -l walltime=1:00:00
@@ -77,7 +77,7 @@ cd \$PBS_O_WORKDIR
 ulimit -s unlimited
 chmod g+rw \${PBS_JOBNAME}.[eo]\${PBS_JOBID}
 module load parallel
-parallel --jobs 16 --tmpdir /dev/shm | parallel --tmpdir /dev/shm --pipepart --block $filesize --jobs 16 --sshloginfile \$PBS_NODEFILE --joblog progress.log.\${PBS_JOBID} --workdir $PWD  -a  $INFILE -k ./$SCRIPT > ${INFILE%%.*}.\${PBS_JOBID}.out 
+parallel --env _ --jobs 16 --tmpdir /dev/shm | parallel --tmpdir /dev/shm --pipepart --block $filesize --jobs 16 --sshloginfile \$PBS_NODEFILE --joblog progress.log.\${PBS_JOBID} --workdir $PWD  -a  $INFILE -k ./$SCRIPT > ${INFILE}.\${PBS_JOBID}.out 
 JOBHEAD
 
-echo -e "\nqstat -f \"\$PBS_JOBID\" | head" >> ${INFILE%%.*}_$SCRIPT.sub
+echo -e "\nqstat -f \"\$PBS_JOBID\" | head" >> ${INFILE}_$SCRIPT.sub
