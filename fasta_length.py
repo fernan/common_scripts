@@ -1,4 +1,5 @@
-#!/data003/GIF/software/packages/python/2.7.9/bin/python
+#!/usr/bin/python
+
 Usage = """
 Print the length of each fasta sequence in a file
 by default prints to the stdout
