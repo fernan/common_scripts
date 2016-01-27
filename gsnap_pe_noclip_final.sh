@@ -2,11 +2,22 @@
 # this is optimized to run on 32 procs: spliting input to 16 peices, 2 procs per peice
 
 ## MODULES
-module use /data004/software/GIF/modules
 module load LAS/parallel/20150922
 module load Serdor
 module load gmap-gsnap/2015-09-29
 
+#create different amount of wait times to ensure we don't have multiple rsyncs
+sleep $(( ( RANDOM % 30 )  + 1 ))
+
+if [ ! -d "$TMPDIR/GMAPDBTMP" ]; then
+echo "copying over GSNAPDB"
+mkdir $TMPDIR/GMAPDBTMP
+#wait for up 2 four minutes to spread out the rsync jobs.
+sleep $(( ( RANDOM % 240 )  + 1 ))
+rsync -avz $GMAPDB/ $TMPDIR/GMAPDBTMP/
+fi
+  
+export GMAPDBTMP=$TMPDIR/GMAPDBTMP
 ## PATHS
 DB_NAME=$GNAME
 
@@ -33,14 +44,14 @@ OUTFILE=$(basename ${FILE1%%.*})
 # --gunzip
 #--novelsplicing=1 \
 #--gunzip \
-
-parallel --jobs 4 \
+mkdir OUTPUT_${OUTFILE}
+parallel --env _ --jobs 1 \
   "gsnap \
---dir=$GMAPDB \
+--dir=$GMAPDBTMP \
 --db=${DB_NAME} \
 --part={}/4 \
 --batch=4 \
---nthreads=4 \
+--nthreads=15 \
 --indel-penalty=1 \
 --trim-mismatch-score=0 \
 --expand-offsets=1 \
@@ -48,8 +59,8 @@ parallel --jobs 4 \
 --input-buffer-size=1000000 \
 --output-buffer-size=1000000 \
 --format=sam \
---split-output=${DB_NAME}_AP_${OUTFILE}.{} \
---failed-input=${DB_NAME}_AP_${OUTFILE}.not_mapped.{} \
+--split-output=OUTPUT_${OUTFILE}/${DB_NAME}_AP_${OUTFILE}.{} \
+--failed-input=OUTPUT_${OUTFILE}/${DB_NAME}_AP_${OUTFILE}.not_mapped.{} \
 ${FILE1} \
 ${FILE2} " \
-::: {0..3}
+::: {0..0}
