@@ -7,8 +7,9 @@ module load braker
 R1="$1"
 R2="$2"
 GENOME="$3"
+BASE=$(basename ${GENOME%.*})
 
 hisat2-build ${GENOME} ${GENOME%.*}
-hisat2 -p 31 -x ${GENOME%.*} -1 ${R1} -2 ${R2} | samtools view -bS - > ${GENOME%.*}_rnaseq.bam
-samtools sort ${GENOME%.*}_rnaseq.bam ${GENOME%.*}_sorted_rnaseq
-braker.pl --cores=32 --overwrite --species=${GENOME%.*} --genome=${GENOME} --bam=${GENOME%.*}_sorted_rnaseq.bam
+hisat2 -p 31 -x ${GENOME%.*} -1 ${R1} -2 ${R2} | samtools view -bS - > ${BASE}_rnaseq.bam
+samtools sort ${BASE}_rnaseq.bam ${BASE}_sorted_rnaseq
+braker.pl --cores=32 --overwrite --species=${BASE} --genome=${GENOME} --bam=${BASE}_sorted_rnaseq.bam
