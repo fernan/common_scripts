@@ -1,3 +1,5 @@
+#!/bin/perl
+
 package FAlite;
 use strict;
 sub new {
