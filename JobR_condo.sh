@@ -75,7 +75,7 @@ cat <<JOBHEAD > ${INFILE%%.*}_${num}.sub
 cd \$PBS_O_WORKDIR
 ulimit -s unlimited
 chmod g+rw \${PBS_JOBNAME}.[eo]\${PBS_JOBID}
-module use /data003/GIF/software/modules
+module use /work/GIF3/software/modules
 module load parallel
 parallel <<FIL
 JOBHEAD
