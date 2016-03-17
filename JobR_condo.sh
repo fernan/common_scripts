@@ -81,7 +81,7 @@ parallel <<FIL
 JOBHEAD
 echo -e "${chunk}" >> ${INFILE%%.*}_${num}.sub
 echo -e "FIL\nqstat -f \"\$PBS_JOBID\" | head" >> ${INFILE%%.*}_${num}.sub
-echo -e "FIL\nwalltime" >> ${INFILE%%.*}_${num}.sub
+echo -e "\nwalltime" >> ${INFILE%%.*}_${num}.sub
 ((num++))
 done<"${INFILE}"
 sed -i '/^$/d' ${INFILE}

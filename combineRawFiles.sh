@@ -16,16 +16,17 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 read -ra ADDR <<< "$line"
 tempR1=$(find ./ -name "${ADDR[0]}*R1*fastq")
 tempR2=$(find ./ -name "${ADDR[0]}*R2*fastq")
-cat $tempR1 > ${ADDR[0]}_${ADDR[1]}_R1_001.fastq &
-cat $tempR2 > ${ADDR[0]}_${ADDR[1]}_R2_001.fastq &
+cat $tempR1 | paste - - - - | sort -k1,1 -S 30G | tr '\t' '\n'  > ${ADDR[0]}_${ADDR[1]}_R1_001.fastq &
+cat $tempR2 | paste - - - - | sort -k1,1 -S 30G | tr '\t' '\n'  > ${ADDR[0]}_${ADDR[1]}_R2_001.fastq &
 wait
 
-done < $1
+done < "Sample.2col" 
 #end of while loop
 
 #do some word counting to verify that the files that are being combined add up to the correct word count
 #will need to check this by hand
 
 find ./Sample* -name "*fastq" | xargs -I xx wc -l xx > counts.txt
+wc -l *fastq > counts.combined.txt
 
 
