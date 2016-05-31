@@ -1,0 +1,26 @@
+max_rd_len=150
+
+[LIB]
+avg_ins=450
+reverse_seq=0
+asm_flags=3
+rd_len_cutoff=150
+rank=1
+pair_num_cutoff=3
+map_len=32
+#first set
+q1=/data019/LAS/mhufford/zea_diplo/PE250-2/Diplo_Perennis_NoIndex_L001_R1_001.fastq.gz 
+q2=/data019/LAS/mhufford/zea_diplo/PE250-2/Diplo_Perennis_NoIndex_L001_R3_001.fastq.gz
+#second set
+q1=/data019/LAS/mhufford/zea_diplo/PE250-1/Diplo_Perennis_NoIndex_L001_R1_001.fastq.gz
+q2=/data019/LAS/mhufford/zea_diplo/PE250-1/Diplo_Perennis_NoIndex_L001_R4_001.fastq.gz
+
+[LIB]
+avg_ins=9000
+reverse_seq=1
+asm_flags=2
+rank=2
+pair_num_cutoff=5
+map_len=35
+q1=/data019/LAS/mhufford/zea_diplo/ZeaDipMatepair/Data/stfxbcdo6y/Unaligned/Project_JRAL_L3_Zea_dip_matepair/Zea-dip-matepair_S3_L003_R1_001.fastq.gz
+q2=/data019/LAS/mhufford/zea_diplo/ZeaDipMatepair/Data/stfxbcdo6y/Unaligned/Project_JRAL_L3_Zea_dip_matepair/Zea-dip-matepair_S3_L003_R3_001.fastq.gz
