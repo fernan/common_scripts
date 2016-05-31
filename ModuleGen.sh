@@ -16,15 +16,8 @@ IFS= read -r -p "short description: " des;
 IFS= read -r -p "homepage url: " hurl;
 IFS= read -r -p "download url: " durl;
 IFS= read -r -p "info url: " iurl;
-IFS= read -r -p "dependent modules list: " modules;
-
-echo program path: $ppath;
-echo program version: $version;
-echo program name: $pname;
-echo description: $des;
-echo Homepage: $hurl;
-echo Download: $durl;
-echo Info: $iurl;
+IFS= read -r -p "dir name for adding to path (list them with a space in between eg: utils scripts): " dpname;
+IFS=' ' read -r -a array <<< "$dpname"
 
 
 mkdir -p /shared/software/GIF/modules/$pname;
@@ -38,26 +31,36 @@ set     progdir         /shared/software/GIF/programs/\$name/\$version
 
 module load compilers/gcc-4.8.2
 MODFILE1
-for f in $modules; do echo
-module load $f >> /shared/software/GIF/modules/$pname/$version
-done;
-cat <<MODFILE2 >> /shared/software/GIF/modules/$pname/$version
-prepend-path    PATH                    \$progdir/bin
-prepend-path    MANPATH                 \$progdir/share/man
-prepend-path    LD_LIBRARY_PATH         \$progdir/lib
-prepend-path    LIBRARY_PATH            \$progdir/lib
-prepend-path    C_INCLUDE_PATH          \$progdir/include
-prepend-path    CPLUS_INCLUDE_PATH      \$progdir/include
-prepend-path    PKG_CONFIG_PATH         \$progdir/lib/pkgconfig
-prepend-path    CMAKE_INCLUDE_PATH      \$progdir/include
-prepend-path    CMAKE_LIBRARY_PATH      \$progdir/lib
+for f in $(echo $LOADEDMODULES | sed 's/:/\n/g'); do echo "module load $f"; done >> /shared/software/GIF/modules/$pname/$version
+for element in "${array[@]}"; do
+echo -e "prepend-path\tPATH\t\t\t\$progdir/$element";
+done >> /shared/software/GIF/modules/$pname/$version
+if [ -d bin ]; then
+echo -e "prepend-path\tPATH\t\t\t\$progdir/bin" >> /shared/software/GIF/modules/$pname/$version
+fi
+if [ -d lib ]; then
+echo -e "prepend-path\tLD_LIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tLIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tPKG_CONFIG_PATH\t\t\$progdir/lib/pkgconfig" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tCMAKE_LIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tLD_LIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
+fi
+if [ -d include ]; then
+echo -e "prepend-path\tC_INCLUDE_PATH\t\t\$progdir/include" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tCPLUS_INCLUDE_PATH\t\t\$progdir/include" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tCMAKE_INCLUDE_PATH\t\t\$progdir/include" >> /shared/software/GIF/modules/$pname/$version
+fi
+if [ -d share ]; then
+echo -e "prepend-path\tMANPATH\t\t\t\$progdir/share/man" >> /shared/software/GIF/modules/$pname/$version
+fi
 
+cat <<MODFILE2 >> /shared/software/GIF/modules/$pname/$version
 proc ModulesDisplay { } {
 global version name progdir
 puts stderr "
 Notes:
-Module name: $name
-Version: $version
+Module name: \$name
+Version: \$version
 $des
 Homepage: $hurl
 Download: $durl
@@ -66,3 +69,7 @@ Info: $iurl
 }
 proc ModulesHelp {} { ModulesDisplay }
 MODFILE2
+
+cat /shared/software/GIF/modules/$pname/$version
+
+echo "module file written sucessfully"
