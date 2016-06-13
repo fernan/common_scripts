@@ -9,7 +9,7 @@ output2=$(basename ${input2} | sed 's/.fastq.gz$//g')
 java -jar ${TRIMMOMATIC_HOME}/trimmomatic-0.36.jar PE \
     -phred33 \
     -threads 16 ${input1} ${input2} ${output1}_paired.fq.gz ${output1}_unpaired.fq.gz ${output2}_paired.fq.gz ${output2}_unpaired.fq.gz \
-     ILLUMINACLIP:${progdir}/adapters/TruSeq3-PE.fa:2:30:10 \
+     ILLUMINACLIP:${TRIMMOMATIC_HOME}/adapters/TruSeq3-PE.fa:2:30:10 \
      LEADING:3 \
      TRAILING:3 \
      SLIDINGWINDOW:4:15 \
