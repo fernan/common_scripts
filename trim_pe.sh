@@ -4,11 +4,14 @@ module load trimmomatic
 pwd=$(pwd)
 input1=$1
 input2=$2
-output1=$(basename ${input1} | sed 's/.fastq.gz$//g')
-output2=$(basename ${input2} | sed 's/.fastq.gz$//g')
+output1=$(basename ${input1%%.*})
+output2=$(basename ${input2%%.*})
 java -jar ${TRIMMOMATIC_HOME}/trimmomatic-0.36.jar PE \
     -phred33 \
-    -threads 16 ${input1} ${input2} ${output1}_paired.fq.gz ${output1}_unpaired.fq.gz ${output2}_paired.fq.gz ${output2}_unpaired.fq.gz \
+    -threads 16 \
+     ${input1} ${input2} \
+     ${output1}_paired.fq.gz ${output1}_unpaired.fq.gz \
+     ${output2}_paired.fq.gz ${output2}_unpaired.fq.gz \
      ILLUMINACLIP:${TRIMMOMATIC_HOME}/adapters/TruSeq3-PE.fa:2:30:10 \
      LEADING:3 \
      TRAILING:3 \

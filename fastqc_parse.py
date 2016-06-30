@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/shared/software/GIF/programs/python/3.5.1/bin/python3
+###!/usr/bin/env python3
 # by James Ashmore 
 # https://www.biostars.org/u/13632/
 # Biostar post: https://www.biostars.org/p/152138/#152151
