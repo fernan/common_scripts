@@ -1,0 +1,39 @@
+# example configuration file 
+
+# DATA is specified as type {PE,JUMP,OTHER} and 5 fields:
+# 1)two_letter_prefix 2)mean 3)stdev 4)fastq(.gz)_fwd_reads
+# 5)fastq(.gz)_rev_reads. The PE reads are always assumed to be
+# innies, i.e. --->.<---, and JUMP are assumed to be outties
+# <---.--->. If there are any jump libraries that are innies, such as
+# longjump, specify them as JUMP and specify NEGATIVE mean. Reverse reads
+# are optional for PE libraries and mandatory for JUMP libraries. Any
+# OTHER sequence data (454, Sanger, Ion torrent, etc) must be first
+# converted into Celera Assembler compatible .frg files (see
+# http://wgs-assembler.sourceforge.com)
+DATA
+PE= aa 250 100 /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/PE/NVASPF_NoIndex_L008_R1.fastq.gz /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/PE/NVASPF_NoIndex_L008_R2.fastq.gz
+PE= ab 250 100 /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/PE/NVASPM_NoIndex_L007_R1.fastq.gz /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/PE/NVASPM_NoIndex_L007_R2.fastq.gz
+JUMP= ja 11000 1000 /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/MP/Sample_NV-S17_R1.fastq.gz /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/MP/Sample_NV-S17_R2.fastq.gz
+JUMP= jb 11000 1000 /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/MP/Sample_NV-S18_R1.fastq.gz /home/arnstrm/arnstrm/20150924_Nicole_Turtle/01_DATA/A_DNAseq/MP/Sample_NV-S18_R2.fastq.gz
+END
+
+PARAMETERS
+#this is k-mer size for deBruijn graph values between 25 and 101 are supported, auto will compute the optimal size based on the read data and GC content
+GRAPH_KMER_SIZE = auto
+#set this to 1 for Illumina-only assemblies and to 0 if you have 1x or more long (Sanger, 454) reads, you can also set this to 0 for large data sets with high jumping clone coverage, e.g. >50x
+USE_LINKING_MATES = 0
+#this parameter is useful if you have too many jumping library mates. Typically set it to 60 for bacteria and 300 for the other organisms 
+LIMIT_JUMP_COVERAGE = 300
+#these are the additional parameters to Celera Assembler.  do not worry about performance, number or processors or batch sizes -- these are computed automatically. 
+#set cgwErrorRate=0.25 for bacteria and 0.1<=cgwErrorRate<=0.15 for other organisms.
+CA_PARAMETERS = cgwErrorRate=0.15 ovlMemory=4GB
+#minimum count k-mers used in error correction 1 means all k-mers are used.  one can increase to 2 if coverage >100
+KMER_COUNT_THRESHOLD = 1
+#auto-detected number of cpus to use
+SOAP_ASSEMBLY = 1
+NUM_THREADS = 32
+#this is mandatory jellyfish hash size -- a safe value is estimated_genome_size*estimated_coverage
+JF_SIZE = 20000000000
+#this specifies if we do (1) or do not (0) want to trim long runs of homopolymers (e.g. GGGGGGGG) from 3' read ends, use it for high GC genomes
+DO_HOMOPOLYMER_TRIM = 0
+END
