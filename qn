@@ -1,4 +1,4 @@
 #!/bin/bash
 echo -e "Node\tState\tnp\tProperties\n==================================";
-qnodes | grep -A 3 "^node" | paste - - - - - | awk '{print $1"\t"$4"\t"$7"\t"$10}';
+qnodes | grep -A 3 "^node" | paste - - - - - | awk '{print $1"\t\t"$4"\t\t"$7"\t"$10}'| sort -k2,2 -r;
 

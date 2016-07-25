@@ -10,9 +10,9 @@ if [ $# -lt 3 ] ; then
 	echo ""
 exit 0
 fi
-module use /data004/software/GIF/modules
+module use /shared/software/GIF/modules
 module load hisat2
-module load braker
+module load braker/1.9
 
 R1="$1"
 R2="$2"
@@ -22,4 +22,4 @@ BASE=$(basename ${GENOME%.*})
 hisat2-build ${GENOME} ${GENOME%.*}
 hisat2 -p 31 -x ${GENOME%.*} -1 ${R1} -2 ${R2} | samtools view -bS - > ${BASE}_rnaseq.bam
 samtools sort ${BASE}_rnaseq.bam ${BASE}_sorted_rnaseq
-braker.pl --cores=32 --overwrite --species=${BASE} --genome=${GENOME} --bam=${BASE}_sorted_rnaseq.bam
+braker.pl --cores=32 --overwrite --species=${BASE} --genome=${GENOME} --bam=${BASE}_sorted_rnaseq.bam --gff3
