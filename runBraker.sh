@@ -14,6 +14,8 @@ module use /shared/software/GIF/modules
 module load hisat2
 module load braker/1.9
 
+cp $GENEMARK_PATH/gm_key ~/.gm_key
+
 R1="$1"
 R2="$2"
 GENOME="$3"
