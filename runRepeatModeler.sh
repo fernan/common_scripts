@@ -14,5 +14,6 @@ module load repeatmodeler/1.0.8
 DATABASE="$(basename ${GENOME%.*}).DB"
 BuildDatabase -name ${DATABASE} -engine ncbi ${GENOME}
 RepeatModeler -database ${DATABASE}  -engine ncbi -pa 16
+ln -s $(find $(pwd) -name "consensi.fa.masked")
 RepeatMasker -pa 16 -gff -lib consensi.fa.masked ${GENOME}
 
