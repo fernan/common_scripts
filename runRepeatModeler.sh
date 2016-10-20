@@ -5,6 +5,15 @@
 # runRepeatModeler.sh Genome.fasta
 # based on Rick's guide https://intranet.gif.biotech.iastate.edu/doku.php/people:remkv6:genome738polished_repeatmodeler_--de_novo_repeat_identification
 
+if [ $# -lt 1 ] ; then
+        echo "usage: runRepeatModeler <genome.fasta>"
+        echo ""
+        echo "To build custom repeat library and mask the repeats of the genome"
+        echo ""
+exit 0
+fi
+
+
 GENOME="$1"
 module use /shared/software/GIF/modules/
 module load parallel
