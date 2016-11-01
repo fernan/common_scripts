@@ -35,9 +35,8 @@ chmod g+rw \${PBS_JOBNAME}.[eo]\${PBS_JOBID}
 module use /shared/software/GIF/modules/
 module load parallel
 module load gatk
-parallel --jobs 8 --sshloginfile \$PBS_NODEFILE --joblog gatk_progress_${num}.log --workdir \$PWD << EOL
 JOBHEAD
 echo ${chunk} >> ${INFILE%%.*}_${num}.sub
-echo -e "EOL\nqstat -f \"\$PBS_JOBID\" | head" >> ${INFILE%%.*}_${num}.sub
+echo -e "qstat -f \"\$PBS_JOBID\" | head" >> ${INFILE%%.*}_${num}.sub
 ((num++))
 done<"${INFILE}"
