@@ -7,4 +7,18 @@ ${TASSEL_HOME}/run_pipeline.pl -fork1 -importGuess ${VCF} -ImputationPlugin -ByM
 
 ${TASSEL_HOME}/run_pipeline.pl -fork2 -importGuess ${VCF%.*}_imputed.vcf -KinshipPlugin -method Centered_IBS -endPlugin -export ${VCF%.*}_kinship.txt -exportType SqrMatrix
 
-${TASSEL_HOME}/run_pipeline.pl -fork3 -importGuess ${VCF%.*}_imputed.vcf -importGuess ${VCF%.*}_kinship.txt -importGuess ${TRAITS} -FixedEffectLMPlugin -maxP 1.0 -permute true -nperm 1000 -biallelicOnly false -siteStatsOut true -endPlugin -export ${VCF%.*}_glm_output
+${TASSEL_HOME}/run_pipeline.pl \
+     -fork1 \
+         -importGuess ${VCF%.*}_imputed.vcf \
+     -fork2 \
+         -importGuess ${TRAITS} \
+     -fork3 \
+         -importGuess ${VCF%.*}_kinship.txt \
+     -combine4 \
+         -input1 \
+         -input2 \
+         -input3 \
+         -intersect \
+         -FixedEffectLMPlugin \
+         -maxP 1.0 -permute true -nperm 1000 -biallelicOnly false \
+         -endPlugin -export ${VCF%.*}_glm_output
