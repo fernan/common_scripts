@@ -10,3 +10,6 @@ b2=Black-Ab-M_S22_L005_R2_001.fastq.gz
 jellyfish count -C -m $kmer -s 1000000000 -t 10 <(zcat ${a1}) <(zcat ${a2}) <(zcat ${b1}) <(zcat ${b2}) -o reads_K${kmer}.jf
 jellyfish histo -t 16 reads_K${kmer}.jf > reads_K${kmer}.histo
 
+
+# once the histo file is created, visit http://qb.cshl.edu/genomescope/ website to upload the histo file
+
