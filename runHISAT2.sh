@@ -2,9 +2,10 @@
 
 module load hisat2
 module load samtools
+DBDIR="/data013/GIF/arnstrm/GENOMEDB"
+GENOME="Mus_musculus.GRCm38.dna.toplevel_hisat2"
 
-p=16 # number of thereads to use (specify one less from total available for sam2bam conversion)
-DATABASE="$3"
+p=16
 R1_FQ="$1"
 R2_FQ="$2"
 
@@ -12,10 +13,9 @@ OUTPUT=$(basename ${R1_FQ} |cut -f 1 -d "_");
 
 hisat2 \
   -p ${p} \
-  -x ${DATABASE} \
+  -x ${DBDIR}/${GENOME} \
   -1 ${R1_FQ} \
   -2 ${R2_FQ} | \
-samtools view -bS - > \
-   ${OUTPUT}.bam
-
-samtools sort ${OUTPUT}.bam ${OUTPUT}_sorted
+   ${OUTPUT}.sam &> ${OUTPUT}.log
+samtools view --threads 16 -b -o ${OUTPUT}.bam ${OUTPUT}.sam
+samtools sort -m 7G -o ${OUTPUT}_sorted.bam -T ${OUTPUT}_temp --threads 16 ${OUTPUT}.bam
