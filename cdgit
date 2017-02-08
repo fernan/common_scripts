@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function cdgit() {
+
+cd "/work/GIF/"$USER"/gitdirs"
+}
+
