@@ -51,7 +51,7 @@ else:
         w.write("#SBATCH --mail-type=end\n")
         w.write("cd $SLURM_SUBMIT_DIR\n")
         w.write("ulimit -s unlimited\n")
-        w.write("module use /shared/software/GIF/modules\n")
+        w.write("module use /work/GIF/software/modules\n")
         count = 0
         while (count < numcmds):
            w.write(cmd[count])
