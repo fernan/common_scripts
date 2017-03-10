@@ -1,6 +1,6 @@
 #!/bin/bash
 module load raxml
-
+#modified for use with condo2017
 if [ $# -lt 2 ] ; then
         echo "usage: runRAxML.sh <alignment_file> <AA|NT>"
         echo ""
@@ -11,18 +11,21 @@ if [ $# -lt 2 ] ; then
 exit 0
 fi
 
-if [ "$2" -eq "AA" ] then
+if [ $2 == "AA" ] 
+then
 MOD="PROTGAMMAAUTO"
-elif ["$2" -eq "NT" ] then
-MOD="GTRGAMMA"
-fi
+else
+	if [$2 == "NT" ] 
+	then
+	MOD="GTRGAMMA"
+	fi
 fi
 
-
+#the last section of the input file name will be used to name the guidance run. Adjust the cut column to obtain unique names for files.  Guidance will not run without.
 ALN="$1"
-SUF=$(basename ${ALN} |cut -f 1 -d "_")
+SUF=$(basename ${ALN} |cut -f 2 -d "_")
 
-raxmlHPC-PTHREADS \
+raxmlHPC-PTHREADS-AVX \
           -T 16 \
           -f a \
           -m ${MOD} \
