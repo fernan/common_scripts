@@ -6,7 +6,7 @@ cwd=$(dirname $(pwd))
 #echo $cwd
 bwd=$(dirname ${cwd})
 #echo $bwd
-if [[ "$bwd" == "/shared/software/GIF/programs" ]]; then
+if [[ "$bwd" == "/work/GIF/software/programs" ]]; then
 echo "Path is correct, proceeding ...."
 
 #while true; do
@@ -30,43 +30,43 @@ IFS=' ' read -r -a array <<< "$dpname"
 PHOME="$(echo "$pname" | tr '[:lower:]' '[:upper:]')"_HOME
 
 
-mkdir -p /shared/software/GIF/modules/$pname;
-cat <<MODFILE1 > /shared/software/GIF/modules/$pname/$version
+mkdir -p /work/GIF/software/modules/GIF/$pname;
+cat <<MODFILE1 > /work/GIF/software/modules/GIF/$pname/$version
 #%Module1.0#####################################################################
 ##
 module-whatis   "$des"
 set     version         $version
 set     name            $pname
-set     progdir         /shared/software/GIF/programs/\$name/\$version
+set     progdir         /work/GIF/software/programs/\$name/\$version
 
-module load compilers/gcc-4.8.2
+module load GIF/gcc
 MODFILE1
-for f in $(echo $LOADEDMODULES | sed 's/:/\n/g'); do echo "module load $f"; done >> /shared/software/GIF/modules/$pname/$version
+for f in $(echo $LOADEDMODULES | sed 's/:/\n/g'); do echo "module load $f"; done >> /work/GIF/software/modules/GIF/$pname/$version
 for element in "${array[@]}"; do
 echo -e "prepend-path\tPATH\t\t\t\$progdir/$element";
-done >> /shared/software/GIF/modules/$pname/$version
+done >> /work/GIF/software/modules/GIF/$pname/$version
 if [ -d bin ]; then
-echo -e "prepend-path\tPATH\t\t\t\$progdir/bin" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tPATH\t\t\t\$progdir/bin" >> /work/GIF/software/modules/GIF/$pname/$version
 else
-echo -e "prepend-path\tPATH\t\t\t\$progdir" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tPATH\t\t\t\$progdir" >> /work/GIF/software/modules/GIF/$pname/$version
 fi
 if [ -d lib ]; then
-echo -e "prepend-path\tLD_LIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
-echo -e "prepend-path\tLIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
-echo -e "prepend-path\tPKG_CONFIG_PATH\t\t\$progdir/lib/pkgconfig" >> /shared/software/GIF/modules/$pname/$version
-echo -e "prepend-path\tCMAKE_LIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
-echo -e "prepend-path\tLD_LIBRARY_PATH\t\t\$progdir/lib" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tLD_LIBRARY_PATH\t\t\$progdir/lib" >> /work/GIF/software/modules/GIF/$pname/$version
+echo -e "prepend-path\tLIBRARY_PATH\t\t\$progdir/lib" >> /work/GIF/software/modules/GIF/$pname/$version
+echo -e "prepend-path\tPKG_CONFIG_PATH\t\t\$progdir/lib/pkgconfig" >> /work/GIF/software/modules/GIF/$pname/$version
+echo -e "prepend-path\tCMAKE_LIBRARY_PATH\t\t\$progdir/lib" >> /work/GIF/software/modules/GIF/$pname/$version
+echo -e "prepend-path\tLD_LIBRARY_PATH\t\t\$progdir/lib" >> /work/GIF/software/modules/GIF/$pname/$version
 fi
 if [ -d include ]; then
-echo -e "prepend-path\tC_INCLUDE_PATH\t\t\$progdir/include" >> /shared/software/GIF/modules/$pname/$version
-echo -e "prepend-path\tCPLUS_INCLUDE_PATH\t\t\$progdir/include" >> /shared/software/GIF/modules/$pname/$version
-echo -e "prepend-path\tCMAKE_INCLUDE_PATH\t\t\$progdir/include" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tC_INCLUDE_PATH\t\t\$progdir/include" >> /work/GIF/software/modules/GIF/$pname/$version
+echo -e "prepend-path\tCPLUS_INCLUDE_PATH\t\t\$progdir/include" >> /work/GIF/software/modules/GIF/$pname/$version
+echo -e "prepend-path\tCMAKE_INCLUDE_PATH\t\t\$progdir/include" >> /work/GIF/software/modules/GIF/$pname/$version
 fi
 if [ -d share ]; then
-echo -e "prepend-path\tMANPATH\t\t\t\$progdir/share/man" >> /shared/software/GIF/modules/$pname/$version
+echo -e "prepend-path\tMANPATH\t\t\t\$progdir/share/man" >> /work/GIF/software/modules/GIF/$pname/$version
 fi
-echo -e "setenv\t$PHOME\t\t\t\$progdir" >> /shared/software/GIF/modules/$pname/$version
-cat <<MODFILE2 >> /shared/software/GIF/modules/$pname/$version
+echo -e "setenv\t$PHOME\t\t\t\$progdir" >> /work/GIF/software/modules/GIF/$pname/$version
+cat <<MODFILE2 >> /work/GIF/software/modules/GIF/$pname/$version
 proc ModulesDisplay { } {
 global version name progdir
 puts stderr "
@@ -82,9 +82,9 @@ Info: $iurl
 proc ModulesHelp {} { ModulesDisplay }
 MODFILE2
 
-#cat /shared/software/GIF/modules/$pname/$version
+#cat /work/GIF/software/modules/GIF/$pname/$version
 echo "module file written sucessfully"
-echo "Module file location: /shared/software/GIF/modules/$pname/$version"
+echo "Module file location: /work/GIF/software/modules/GIF/$pname/$version"
 else
 echo "please change to /path/to/programs/program_dir/version_num first";
 fi
