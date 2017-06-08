@@ -4,7 +4,7 @@ FASTA="$1"
 blastn \
 -task megablast \
 -query ${FASTA} \
--db /data021/GIF/arnstrm/Baum/GenePrediction_Hg_20160115/05_databases/nt/nt \
+-db /work/GIF/GIF3/arnstrm/Baum/GenePrediction_Hg_20160115/05_databases/nt/nt \
 -outfmt '6 qseqid staxids bitscore std sscinames sskingdoms stitle' \
 -culling_limit 5 \
 -num_threads 16 \
