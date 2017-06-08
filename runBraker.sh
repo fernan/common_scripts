@@ -22,6 +22,6 @@ GENOME="$3"
 BASE=$(basename ${GENOME%.*})
 
 hisat2-build ${GENOME} ${GENOME%.*}
-hisat2 -p 31 -x ${GENOME%.*} -1 ${R1} -2 ${R2} | samtools view -bS - > ${BASE}_rnaseq.bam
+hisat2 -p 15 -x ${GENOME%.*} -1 ${R1} -2 ${R2} | samtools view -bS - > ${BASE}_rnaseq.bam
 samtools sort -m 5G ${BASE}_rnaseq.bam > ${BASE}_sorted_rnaseq.bam
 braker.pl --cores=32 --overwrite --species=${BASE} --genome=${GENOME} --bam=${BASE}_sorted_rnaseq.bam --gff3
