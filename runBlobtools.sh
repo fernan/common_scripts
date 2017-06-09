@@ -3,11 +3,11 @@
 module use /shared/software/GIF/modules/
 module load bwa
 module load samtools
-module load blobtools
+module load GIF2/blobtools
 
-BAM=combined_picsort.bam
-GENOME=zea_diploperennis_final_scaffolds.fasta
-BLAST=zea_diploperennis_final_scaffolds.vs.nt.cul5.1e25.megablast.txt
+BAM=red_abalone_02Jun2017_5fUJu_rnaseq.bam
+GENOME=red_abalone_02Jun2017_5fUJu.fasta
+BLAST=red_abalone_02Jun2017_5fUJu.vs.nt.cul5.1e25.megablast.out
 
 
 NODES=/shared/software/GIF/programs/blobtools/nodes.dmp
