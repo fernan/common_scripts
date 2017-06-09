@@ -1,4 +1,7 @@
 #!/bin/bash
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/db/taxdb.tar.gz
+tar -zxvf taxdb.tar.gz
+
 module load ncbi-blast
 FASTA="$1"
 blastn \
