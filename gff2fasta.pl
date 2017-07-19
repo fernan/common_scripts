@@ -1,3 +1,4 @@
+#!/opt/rit/app/perl/5.22.1/bin/perl
 #taken from https://www.biostars.org/p/46281/ and modified as needed 10/15/15
 use strict;
 use warnings;
