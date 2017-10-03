@@ -1,7 +1,7 @@
 #!/bin/bash
-module load tassel
+module load GIF2/tassel
 VCF="$1"
-TRAITS="/data013/GIF/arnstrm/Purcell/albacore/2_gatk/d_tassel/pheno_traits.txt"
+TRAITS="/work/GIF/remkv6/Purcell/Abalone/15_WhiteWildCultured/02_GWAS/wildCultivatedPhenotypeFixed.txt"
 # traits file should be numerical
 # else the file will be empty
 
