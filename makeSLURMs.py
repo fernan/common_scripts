@@ -46,7 +46,7 @@ else:
         w.write("#SBATCH -J "+jobname+"_"+str(filecount)+"\n")
         w.write("#SBATCH -o "+jobname+"_"+str(filecount)+".o%j\n")
         w.write("#SBATCH -e "+jobname+"_"+str(filecount)+".e%j\n")
-        w.write("#SBATCH --mail-user=arnstrm@gmail.com\n")
+        w.write("#SBATCH --mail-user=remkv6@gmail.com\n")
         w.write("#SBATCH --mail-type=begin\n")
         w.write("#SBATCH --mail-type=end\n")
         w.write("cd $SLURM_SUBMIT_DIR\n")

@@ -1,4 +1,4 @@
-module load gawk/4.1.3
+module load GIF2/gawk/4.1.3
 ##to execute 
 #cat inputfile | intervalBins.awk interval
 #cat inputfile | intervalBins.awk 1000

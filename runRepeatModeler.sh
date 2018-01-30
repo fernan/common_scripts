@@ -25,6 +25,6 @@ module load GIF2/perl/5.22.1
 DATABASE="$(basename ${GENOME%.*}).DB"
 BuildDatabase -name ${DATABASE} -engine ncbi ${GENOME}
 RepeatModeler -database ${DATABASE}  -engine ncbi -pa 16
-ln -s $(find $(pwd) -name "consensi.fa.masked")
-RepeatMasker -pa 16 -gff -lib consensi.fa.masked ${GENOME}
+ln -s $(find $(pwd) -name "consensi.fa.classified")
+RepeatMasker -pa 16 -gff -lib consensi.fa.classified ${GENOME}
 
