@@ -1,4 +1,3 @@
-module load GIF2/gawk/4.1.3
 ##to execute 
 #cat inputfile | intervalBins.awk interval
 #cat inputfile | intervalBins.awk 1000
@@ -9,7 +8,7 @@ module load GIF2/gawk/4.1.3
 ##output looks like
 #Chr01 interval geneticElementsPerInterval
 
-gawk 'BEGIN {  OFS="\t"; BINSIZE="'$1'"; } 
+/usr/bin/gawk 'BEGIN {  OFS="\t"; BINSIZE="'$1'"; } 
 { A=sprintf("%d", $2/BINSIZE);
   BIN[$1][A]++; } 
 END { for (X in BIN) { 
