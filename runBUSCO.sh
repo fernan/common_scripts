@@ -54,7 +54,7 @@ module load GIF/busco/2.0
 genome="$1"
 ORG="$2"
 outname=$(basename ${genome%.*})
-export AUGUSTUS_CONFIG_PATH="$AUGUSTUS_CONFIG_PATH;./config"
+export AUGUSTUS_CONFIG_PATH="./config"
 
 python3 ${BUSCO_HOME}/BUSCO.py \
   -o ${outname} \
