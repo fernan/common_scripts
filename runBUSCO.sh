@@ -2,14 +2,14 @@
 # runs the busco pipeline on the genome assesment mode
 # if your genome is not plan change the select the suitable option below
 # run it as:
-# sh runBUSCO_genome.sh genome.fasta
+# sh runBUSCO_genome.sh genome.fasta OrganismProfile
 # Arun Seetharam
 # 2015/10/09 <arnstrm@iastate.edu>
 #
 #
-# SELECT ONE OF THE BELOW PROFILES
+# SELECT ONE OF THE BELOW ORGANISM PROFILES
 #
-ORG=actinopterygii_odb9
+#ORG=actinopterygii_odb9
 #ORG=arthropoda_odb9
 #ORG=ascomycota_odb9
 #ORG=aves_odb9
@@ -44,12 +44,18 @@ MODE=genome
 #MODE=proteins
 
 # results will be stored in the new directroy with the genome suffix
-
+if [ $# -lt 2 ] ; then
+echo "please specify both your genome and the organism profile you wish to use";
+exit;
+fi
 
 module use /work/GIF/software/modules
 module load GIF/busco/2.0
 genome="$1"
+ORG="$2"
 outname=$(basename ${genome%.*})
+export AUGUSTUS_CONFIG_PATH="$AUGUSTUS_CONFIG_PATH;./config"
+
 python3 ${BUSCO_HOME}/BUSCO.py \
   -o ${outname} \
   -i ${genome} \
