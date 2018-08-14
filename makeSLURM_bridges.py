@@ -44,8 +44,18 @@ else:
                 cmd.append(line)
                 line = cmds.readline()
         w = open(jobname+'_'+str(filecount)+'.sub','w')
-        w.write("#!/bin/bash\n")
+        
+#SBATCH -J canu4
+#SBATCH -o canu4.o%j
+#SBATCH -p RM
+#SBATCH -N 1
+#SBATCH -n 28
+#SBATCH -t 48:00:00
+
+w.write("#!/bin/bash\n")
         w.write("#SBATCH -N 1\n")
+        w.write("#SBATCH -n 28\n")
+        w.write("#SBATCH -p RM\n")
         w.write("#SBATCH -t 48:00:00\n")
         w.write("#SBATCH -J "+jobname+"_"+str(filecount)+"\n")
         w.write("#SBATCH -o "+jobname+"_"+str(filecount)+".o%j\n")
