@@ -51,9 +51,12 @@ else:
         w.write("#SBATCH --mail-type=end\n")
         w.write("cd $SLURM_SUBMIT_DIR\n")
         w.write("ulimit -s unlimited\n")
-        w.write("module use /work/GIF/software/modules\n")
-        w.write("module load parallel\n")
-        w.write("parallel --joblog "+jobname+"_progress_"+str(filecount)+".log --workdir $PWD <<FIL\n")
+        w.write("module use /opt/rit/spack-modules/lmod/linux-rhel7-x86_64/Core\n")
+        w.write("module use /opt/rit/spack-modules/lmod/linux-rhel7-x86_64/gcc/7.3.0\n")
+        w.write("module purge\n")
+        w.write("#module use /work/GIF/software/modules\n")
+        w.write("module load parallel gatk\n")
+        w.write("parallel -j 1 --joblog "+jobname+"_progress_"+str(filecount)+".log --workdir $PWD <<FIL\n")
         count = 0
         while (count < numcmds):
            w.write(cmd[count])
